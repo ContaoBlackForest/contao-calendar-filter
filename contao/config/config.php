@@ -12,3 +12,5 @@
  * @license   LGPL-3.0+
  * @copyright Copyright 2015 ContaoBlackForest
  */
+
+$GLOBALS['FE_MOD']['events']['eventfilter'] = 'ContaoBlackForest\Module\CalendarFilter\ModuleEventFilter';
