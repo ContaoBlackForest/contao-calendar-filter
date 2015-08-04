@@ -1,0 +1,55 @@
+{
+    "name": "contaoblackforest/contao-calendar-filter",
+    "description": "This extend the calendar module with an frontend filter for Contao CMS",
+    "keywords": [
+        "contao",
+        "module",
+        "calendar",
+        "filter"
+    ],
+    "type": "contao-module",
+    "require": {
+        "php": ">=5.3",
+        "contao/core": ">=3.2,<4",
+        "contao-community-alliance/composer-plugin": "~2.0",
+        "contaoblackforest/contao-easy-extend": "~1.0",
+        "contaoblackforest/contao-symfony-component-form": "dev-develop"
+    },
+    "license": "LGPL-3.0+",
+    "authors": [
+        {
+            "name": "Sven Baumann",
+            "email": "baumann.sv@gmail.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Dominik Tomasi",
+            "email": "dominik.tomasi@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/ContaoBlackForest/contao-calendar-filter/issues",
+        "source": "https://github.com/ContaoBlackForest/contao-calendar-filter"
+    },
+    "minimum-stability": "dev",
+    "require-dev": {
+        "squizlabs/php_codesniffer": "~2.3",
+        "phpunit/phpunit": "~3.7"
+    },
+    "autoload": {
+        "psr-0": {
+            "ContaoBlackForest\\Module\\CalendarFilter\\": "src"
+        }
+    },
+    "extra": {
+        "contao": {
+            "sources": {
+                "contao": "system/modules/calendar-filter"
+            }
+        },
+        "branch-alias": {
+            "dev-develop": "1.0.x-dev"
+        }
+    }
+}
