@@ -140,13 +140,13 @@ trait EventList
                     $name,
                     'choice',
                     array(
-                        'label' => $GLOBALS['TL_LANG']['FMD']['eventfilter'][$name],
+                        'label'       => $GLOBALS['TL_LANG']['FMD']['eventfilter'][$name],
                         'empty_value' => $GLOBALS['TL_LANG']['FMD']['eventfilter']['pleaseSelect'],
                         'choices'     => $choicesData,
-                        'data' => \Input::post($name),
+                        'data'        => \Input::post($name),
                         'attr'        => array(
-                            'onchange'    => 'this.form.submit()',
-                            'class'       => 'styled_select tl_select',
+                            'onchange' => 'this.form.submit()',
+                            'class'    => 'styled_select tl_select',
                         )
                     )
                 );
