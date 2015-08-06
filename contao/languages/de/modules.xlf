@@ -2,8 +2,8 @@
     <file datatype="php" original="system/modules/calendar-filter/languages/de/modules.xlf" source-language="en">
         <body>
             <trans-unit id="FMD.eventfilter.0">
-                <source>Event-Filter</source>
-                <target>Event-Filter</target>
+                <source>EventList-Filter</source>
+                <target>EventList-Filter</target>
             </trans-unit>
             <trans-unit id="FMD.eventfilter.1">
                 <source>Filter events by specific criteria</source>

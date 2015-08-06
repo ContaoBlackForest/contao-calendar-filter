@@ -1,6 +1,16 @@
-<?xml version="1.0" ?><xliff version="1.1">
-    <file datatype="php" original="system/modules/calendar-filter/languages/en/tl_module.xlf" source-language="en">
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="system/modules/calendar-filter/languages/de/tl_module.xlf" source-language="en">
         <body>
+            <trans-unit id="tl_module.pidCalendar.0">
+                <source>Calendar</source>
+            </trans-unit>
+            <trans-unit id="tl_module.filterField.0">
+                <source>Filter field</source>
+            </trans-unit>
+            <trans-unit id="tl_module.filterField.1">
+                <source>Please select which fields to filter.</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>
