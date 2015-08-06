@@ -1,9 +1,15 @@
 <?xml version="1.0" ?>
 <xliff version="1.1">
-    <file datatype="php" original="system/modules/calendar-filter/languages/de/tl_module.xlf" source-language="en">
+    <file datatype="php" original="system/modules/calendar-filter/languages/en/tl_module.xlf" source-language="en">
         <body>
-            <trans-unit id="tl_module.pidCalendar.0">
+            <trans-unit id="tl_module.pidCalendarFilter">
                 <source>Calendar</source>
+            </trans-unit>
+            <trans-unit id="tl_module.startDateCalendarFilter">
+                <source>Months</source>
+            </trans-unit>
+            <trans-unit id="tl_module.authorCalendarFilter">
+                <source>Author</source>
             </trans-unit>
             <trans-unit id="tl_module.filterField.0">
                 <source>Filter field</source>

@@ -129,11 +129,13 @@ trait EventList
                     $name,
                     'choice',
                     array(
-                        'placeholder' => '-',
-                        'choices' => $choicesData,
-                        'attr'    => array(
-                            'onchange' => 'this.form.submit()',
-                            'class'    => 'styled_select tl_select',
+                        'label' => $GLOBALS['TL_LANG']['FMD']['eventfilter'][$name],
+                        'empty_value' => $GLOBALS['TL_LANG']['FMD']['eventfilter']['pleaseSelect'],
+                        'choices'     => $choicesData,
+                        'attr'        => array(
+                            'is_selected' => \Input::post($name),
+                            'onchange'    => 'this.form.submit()',
+                            'class'       => 'styled_select tl_select',
                         )
                     )
                 );
