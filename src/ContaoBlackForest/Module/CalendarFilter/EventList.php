@@ -125,6 +125,9 @@ trait EventList
             if (!empty($choicesData)) {
                 $sort($choicesData);
 
+                // add blank option
+                $choicesData = array_merge(array('-' => '-'), $choicesData);
+
                 $builder->add(
                     $name,
                     'choice',
