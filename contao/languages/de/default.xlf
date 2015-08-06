@@ -1,0 +1,22 @@
+<?xml version="1.0" ?><xliff version="1.1">
+    <file datatype="php" original="system/modules/calendar-filter/languages/de/defualt.xlf" source-language="en">
+        <body>
+            <trans-unit id="FMD.eventfilter.pid">
+                <source>Calendar</source>
+                <target>Kalender</target>
+            </trans-unit>
+            <trans-unit id="FMD.eventfilter.startDate">
+                <source>Months</source>
+                <target>Monat</target>
+            </trans-unit>
+            <trans-unit id="FMD.eventfilter.author">
+                <source>Author</source>
+                <target>Author</target>
+            </trans-unit>
+            <trans-unit id="FMD.eventfilter.pleaseSelect">
+                <source>Please select ...</source>
+                <target>Bitte wählen ...</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
