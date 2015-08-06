@@ -157,7 +157,7 @@ trait EventList
             }
 
             $template = $form->getFormHandler()->getTwig()->getEnvironment()->render(
-                'index.html.twig',
+                'form/bootstrap3.horizontal.html.twig',
                 array(
                     'form' => $form->getBuilder()->getForm()->createView(),
                 )
