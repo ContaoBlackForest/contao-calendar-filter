@@ -43,10 +43,6 @@ trait EventList
             $GLOBALS['TL_LANG']['FMD']['eventlist'][0] = $GLOBALS['TL_LANG']['FMD']['eventfilter'][0];
         }
 
-        if ($pid = \Input::post('pid')) {
-            $this->cal_calendar = serialize(array($pid));
-        }
-
         return parent::generate();
     }
 
@@ -58,15 +54,22 @@ trait EventList
         parent::compile();
 
         $this->getFilter();
+
+
     }
 
     protected function getFilter()
     {
         /** @var \ModuleEventlist $this */
         if (!$this->filterField
-            || empty($this->arrEvents)
         ) {
             return null;
+        }
+
+        if ($filter = \Session::getInstance()->get('eventlistfilter')) {
+            $this->Template->filterForm = $this->compileFilterForm($filter);
+
+            return true;
         }
 
         $events = array();
@@ -90,6 +93,10 @@ trait EventList
         }
 
         $this->Template->filterForm = $this->compileFilterForm($filter);
+
+        if (!empty($filter)) {
+            \Session::getInstance()->setData(array('eventlistfilter' => $filter));
+        }
 
         return true;
     }
@@ -118,7 +125,7 @@ trait EventList
 
                 if ($choicesValue instanceof \Model) {
                     global $TL_DCA;
-                    $sort = 'array_multisort';
+                    $sort = 'natcasesort';
                     /** @var \Model $choicesValue */
                     $foreignKey                = explode('.', $TL_DCA['tl_calendar_events']['fields'][$name]['foreignKey']);
                     $choicesData[$choicesName] = $choicesValue->$foreignKey[1];
