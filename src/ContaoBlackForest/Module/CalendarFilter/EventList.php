@@ -43,6 +43,10 @@ trait EventList
             $GLOBALS['TL_LANG']['FMD']['eventlist'][0] = $GLOBALS['TL_LANG']['FMD']['eventfilter'][0];
         }
 
+        if ($pid = \Input::post('pid')) {
+            $this->cal_calendar = serialize(array($pid));
+        }
+
         return parent::generate();
     }
 
@@ -132,8 +136,8 @@ trait EventList
                         'label' => $GLOBALS['TL_LANG']['FMD']['eventfilter'][$name],
                         'empty_value' => $GLOBALS['TL_LANG']['FMD']['eventfilter']['pleaseSelect'],
                         'choices'     => $choicesData,
+                        'data' => \Input::post($name),
                         'attr'        => array(
-                            'is_selected' => \Input::post($name),
                             'onchange'    => 'this.form.submit()',
                             'class'       => 'styled_select tl_select',
                         )
