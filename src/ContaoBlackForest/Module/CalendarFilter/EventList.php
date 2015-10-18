@@ -55,7 +55,9 @@ trait EventList
 
         $this->getFilter();
 
-
+        if ($this->Template->eventcount === 0) {
+            \Session::getInstance()->remove('eventlistfilter');
+        }
     }
 
     protected function getFilter()
