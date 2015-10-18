@@ -227,6 +227,19 @@ trait EventList
                 if ($value[$field]
                     && \Validator::isNumeric($value[$field])
                 ) {
+                    if (array_key_exists('start', $value)
+                        && $value['start']
+                        && $value['start'] < time()
+                    ) {
+                        continue;
+                    }
+                    if (array_key_exists('stop', $value)
+                        && $value['stop']
+                        && $value['stop'] > time()
+                    ) {
+                        continue;
+                    }
+
                     $month      = \Date::parse('m::3', $value[$field]);
                     $year       = \Date::parse('Y', $value[$field]);
                     $stringDate = $month . ' - ' . $year;

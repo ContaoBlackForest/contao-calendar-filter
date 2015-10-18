@@ -61,6 +61,24 @@ class Events
                         continue;
                     }
 
+                    if (array_key_exists('start', $value)
+                        && $value['start']
+                        && $value['start'] < time()
+                    ) {
+                        unset($calendars[$index]);
+
+                        continue;
+                    }
+
+                    if (array_key_exists('stop', $value)
+                        && $value['stop']
+                        && $value['stop'] > time()
+                    ) {
+                        unset($calendars[$index]);
+
+                        continue;
+                    }
+
                     if (count($timeRange) < 2) {
                         unset($calendars[$index]);
                     }
