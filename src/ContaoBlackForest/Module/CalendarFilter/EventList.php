@@ -41,6 +41,12 @@ trait EventList
             $this->filterForm  = '';
 
             $GLOBALS['TL_LANG']['FMD']['eventlist'][0] = $GLOBALS['TL_LANG']['FMD']['eventfilter'][0];
+
+            if ($this->filterMergeMonth) {
+                $this->filterField = implode(',', $this->filterField);
+                $this->filterField = str_replace('startDate', 'startDate,mergeMonth', $this->filterField);
+                $this->filterField = explode(',', $this->filterField);
+            }
         }
 
         return parent::generate();
@@ -68,11 +74,17 @@ trait EventList
             return null;
         }
 
-        if ($filter = \Session::getInstance()->get('eventlistfilter')) {
+        $countEvents = \Session::getInstance()->get('eventlistfilterCount');
+
+        $filter = \Session::getInstance()->get('eventlistfilter');
+        if ($filter
+            && \Session::getInstance()->get('eventlistfilterCount') === count($this->arrEvents)
+        ) {
             $this->Template->filterForm = $this->compileFilterForm($filter);
 
             return true;
         }
+
 
         $events = array();
         foreach ($this->arrEvents as $firstRow) {
@@ -94,10 +106,13 @@ trait EventList
             $filter[$field] = $this->getFilterFieldInformation($field, $events);
         }
 
+        $this->mergeFilterMonth($filter);
+
         $this->Template->filterForm = $this->compileFilterForm($filter);
 
         if (!empty($filter)) {
             \Session::getInstance()->setData(array('eventlistfilter' => $filter));
+            \Session::getInstance()->set('eventlistfilterCount', count($this->arrEvents));
         }
 
         return true;
@@ -114,7 +129,18 @@ trait EventList
         $form    = new ContaoFormBuilder();
         $builder = $form->getBuilder();
 
-        foreach ($data as $name => $value) {
+        $sortedData = array();
+        foreach ($this->filterField as $sortKey) {
+            $sortedData[$sortKey] = $data[$sortKey];
+        }
+
+        foreach ($sortedData as $name => $value) {
+            if ($this->filterMergeMonth
+                && $name === 'startDate'
+            ) {
+                continue;
+            }
+
             $sort        = '';
             $choicesData = array();
 
@@ -123,6 +149,10 @@ trait EventList
                     $sort = 'ksort';
 
                     $choicesData[$choicesName] = $choicesValue;
+
+                    if ($name === 'mergeMonth') {
+                        $choicesData[$choicesName] = $choicesName;
+                    }
                 }
 
                 if ($choicesValue instanceof \Model) {
@@ -137,6 +167,20 @@ trait EventList
 
             if (!empty($choicesData)) {
                 $sort($choicesData);
+
+                if ($name === 'mergeMonth') {
+                    $name = 'startDate';
+
+                    $sortChoicesData = array();
+                    foreach (array_values($GLOBALS['TL_LANG']['MONTHS']) as $month) {
+                        if (!array_key_exists($month, $choicesData)) {
+                            continue;
+                        }
+                        $sortChoicesData[$month] = $choicesData[$month];
+                    }
+
+                    $choicesData = $sortChoicesData;
+                }
 
                 $builder->add(
                     $name,
@@ -194,6 +238,7 @@ trait EventList
         $information = array();
 
         if (empty($information)
+            && array_key_exists($field, $TL_DCA['tl_calendar_events']['fields'])
             && array_key_exists('foreignKey', $TL_DCA['tl_calendar_events']['fields'][$field])
         ) {
             $cache      = array();
@@ -258,5 +303,23 @@ trait EventList
             }
         }
         return $information;
+    }
+
+    protected function mergeFilterMonth(&$filter)
+    {
+        if (!$this->filterMergeMonth
+            || !array_key_exists('startDate', $filter)
+        ) {
+            return;
+        }
+
+        $mergeMonth = array();
+        foreach ($filter['startDate'] as $monthRange => $month) {
+            $chunks = explode(' - ', $month);
+
+            $mergeMonth[$chunks[0]][$chunks[1]] = $monthRange;
+        }
+
+        $filter['mergeMonth'] = $mergeMonth;
     }
 }

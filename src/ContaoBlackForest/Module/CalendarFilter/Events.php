@@ -23,26 +23,25 @@ namespace ContaoBlackForest\Module\CalendarFilter;
  */
 class Events
 {
-
     /**
      * @param $arrCalendars
      * @param $intStart
      * @param $intEnd
      */
-    public function getAllEvents($arrCalendars, $intStart, $intEnd)
+    public function getAllEvents($arrEvents, $arrCalendars, $intStart, $intEnd, $eventList)
     {
         if ($filter = \Session::getInstance()->get('eventlistfilter')) {
             foreach ($filter as $post => $value) {
                 if ($postValue = \Input::post($post)) {
-                    $this->filterCalendar($arrCalendars, array('field' => $post, 'value' => $postValue));
+                    $this->filterCalendar($arrEvents, array('field' => $post, 'value' => $postValue), $eventList);
                 }
             }
         }
 
-        return $arrCalendars;
+        return $arrEvents;
     }
 
-    protected function filterCalendar(&$calendars, array $argument)
+    protected function filterCalendar(&$calendars, array $argument, $eventList)
     {
         foreach ($calendars as $index => &$value) {
             if (array_key_exists($argument['field'], $value)) {
@@ -61,32 +60,41 @@ class Events
                         continue;
                     }
 
-                    if (array_key_exists('start', $value)
-                        && $value['start']
-                        && $value['start'] < time()
-                    ) {
-                        unset($calendars[$index]);
-
-                        continue;
-                    }
-
-                    if (array_key_exists('stop', $value)
-                        && $value['stop']
-                        && $value['stop'] > time()
-                    ) {
-                        unset($calendars[$index]);
-
-                        continue;
-                    }
-
                     if (count($timeRange) < 2) {
+                        if ($eventList->filterMergeMonth) {
+                            $filter = \Session::getInstance()->get('eventlistfilter');
+
+                            if (!array_key_exists($argument['value'], $filter['mergeMonth'])) {
+                                unset($calendars[$index]);
+                                continue;
+                            }
+
+                            $removeFromIndex = true;
+                            foreach ($filter['mergeMonth'][$argument['value']] as $timeRange) {
+                                $timeRange = explode('-', $timeRange);
+                                if (($value[$argument['field']] > $timeRange[0])
+                                    && ($value[$argument['field']] < $timeRange[1])
+                                ) {
+                                    $removeFromIndex = false;
+                                }
+                            }
+
+                            if (!$removeFromIndex) {
+                                continue;
+                            }
+                        }
+
                         unset($calendars[$index]);
                     }
                 }
             }
 
             if (!array_key_exists($argument['field'], $value)) {
-                $this->filterCalendar($value, $argument);
+                $this->filterCalendar($value, $argument, $eventList);
+            }
+
+            if (empty($value)) {
+                unset($calendars[$index]);
             }
         }
     }
