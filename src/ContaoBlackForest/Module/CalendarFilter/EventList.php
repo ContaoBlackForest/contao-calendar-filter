@@ -73,8 +73,6 @@ trait EventList
             return null;
         }
 
-        $countEvents = \Session::getInstance()->get('eventlistfilterCount');
-
         $filter = \Session::getInstance()->get('eventlistfilter');
         if ($filter
             && \Session::getInstance()->get('eventlistfilterCount') === count($this->arrEvents)
