@@ -61,7 +61,7 @@ class Events
                     }
 
                     if (count($timeRange) < 2) {
-                        if ($eventList->filterMergeMonth) {
+                        if ($eventList->calendarFilterMergeMonth) {
                             $filter = \Session::getInstance()->get('eventlistfilter');
 
                             if (!array_key_exists($argument['value'], $filter['mergeMonth'])) {

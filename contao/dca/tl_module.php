@@ -18,13 +18,13 @@
     'eventlist',
     'config',
     array(
-        'config_filter' => array('filterField', 'filterMergeMonth'),
+        'config_filter' => array('calendarFilterField', 'calendarFilterMergeMonth'),
     )
 );
 
 $fields = array(
-    'filterField' => array(
-        'label'            => &$GLOBALS['TL_LANG']['tl_module']['filterField'],
+    'calendarFilterField' => array(
+        'label'            => &$GLOBALS['TL_LANG']['tl_module']['calendarFilterField'],
         'exclude'          => true,
         'inputType'        => 'checkboxWizard',
         'options_callback' => array('ContaoBlackForest\Module\CalendarFilter\DataContainer\Module', 'getFilterFields'),
@@ -32,9 +32,9 @@ $fields = array(
         'sql'              => "blob NULL"
     ),
 
-    'filterMergeMonth'   => array
+    'calendarFilterMergeMonth'   => array
     (
-        'label'     => &$GLOBALS['TL_LANG']['tl_module']['filterMergeMonth'],
+        'label'     => &$GLOBALS['TL_LANG']['tl_module']['calendarFilterMergeMonth'],
         'exclude'   => true,
         'filter'    => true,
         'inputType' => 'checkbox',

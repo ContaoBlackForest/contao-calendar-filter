@@ -27,25 +27,24 @@ use ModuleEventlist;
 /** @var \ModuleEventlist $this */
 trait EventList
 {
-
     /**
      * {@inheritDoc}
      */
     public function generate()
     {
         /** @var \ModuleEventlist $this */
-        $this->filterField = deserialize($this->filterField);
+        $this->calendarFilterField = deserialize($this->calendarFilterField);
 
-        if (!empty($this->filterField)) {
+        if (!empty($this->calendarFilterField)) {
             $this->strTemplate = 'mod_eventlist_filter';
             $this->filterForm  = '';
 
             $GLOBALS['TL_LANG']['FMD']['eventlist'][0] = $GLOBALS['TL_LANG']['FMD']['eventfilter'][0];
 
-            if ($this->filterMergeMonth) {
-                $this->filterField = implode(',', $this->filterField);
-                $this->filterField = str_replace('startDate', 'startDate,mergeMonth', $this->filterField);
-                $this->filterField = explode(',', $this->filterField);
+            if ($this->calendarFilterMergeMonth) {
+                $this->calendarFilterField = implode(',', $this->calendarFilterField);
+                $this->calendarFilterField = str_replace('startDate', 'startDate,mergeMonth', $this->calendarFilterField);
+                $this->calendarFilterField = explode(',', $this->calendarFilterField);
             }
         }
 
@@ -69,7 +68,7 @@ trait EventList
     protected function getFilter()
     {
         /** @var \ModuleEventlist $this */
-        if (!$this->filterField
+        if (!$this->calendarFilterField
         ) {
             return null;
         }
@@ -80,9 +79,11 @@ trait EventList
         if ($filter
             && \Session::getInstance()->get('eventlistfilterCount') === count($this->arrEvents)
         ) {
-            $this->Template->filterForm = $this->compileFilterForm($filter);
+            if (count($filter) === count($this->calendarFilterField)) {
+                $this->Template->filterForm = $this->compileFilterForm($filter);
 
-            return true;
+                return true;
+            }
         }
 
 
@@ -102,7 +103,7 @@ trait EventList
         }
 
         $filter = array();
-        foreach ($this->filterField as $field) {
+        foreach ($this->calendarFilterField as $field) {
             $filter[$field] = $this->getFilterFieldInformation($field, $events);
         }
 
@@ -130,12 +131,12 @@ trait EventList
         $builder = $form->getBuilder();
 
         $sortedData = array();
-        foreach ($this->filterField as $sortKey) {
+        foreach ($this->calendarFilterField as $sortKey) {
             $sortedData[$sortKey] = $data[$sortKey];
         }
 
         foreach ($sortedData as $name => $value) {
-            if ($this->filterMergeMonth
+            if ($this->calendarFilterMergeMonth
                 && $name === 'startDate'
             ) {
                 continue;
@@ -307,7 +308,7 @@ trait EventList
 
     protected function mergeFilterMonth(&$filter)
     {
-        if (!$this->filterMergeMonth
+        if (!$this->calendarFilterMergeMonth
             || !array_key_exists('startDate', $filter)
         ) {
             return;
