@@ -43,3 +43,5 @@ $fields = array(
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields'] = array_merge($fields, $GLOBALS['TL_DCA']['tl_module']['fields']);
+
+unset($fields);
