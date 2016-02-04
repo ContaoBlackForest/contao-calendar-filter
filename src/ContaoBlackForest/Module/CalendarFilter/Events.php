@@ -292,7 +292,7 @@ class Events
             }
 
             $template = $form->getFormHandler()->getTwig()->getEnvironment()->render(
-                'form/bootstrap3.horizontal.html.twig',
+                'form/' . $this->eventList->calendarFilterTemplate,
                 array(
                     'form' => $form->getBuilder()->getForm()->createView(),
                 )
