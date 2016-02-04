@@ -174,9 +174,20 @@ class Events
             return null;
         }
 
-        $filterAll = \Session::getInstance()->get('eventlistfilterall_' . $this->eventList->id);
-        if (!$filterAll) {
-            \Session::getInstance()->set('eventlistfilter_' . $this->eventList->id, $filter);
+        $filterAll      = \Session::getInstance()->get('eventlistfilterall_' . $this->eventList->id);
+        $resetFilterAll = true;
+        foreach (array_keys($filterAll) as $postField) {
+            if (!\Input::post($postField)) {
+                continue;
+            }
+
+            $resetFilterAll = false;
+        }
+        if (!$filterAll
+            || $resetFilterAll
+        ) {
+            \Session::getInstance()->set('eventlistfilterall_' . $this->eventList->id, $filter);
+            $filterAll = \Session::getInstance()->get('eventlistfilterall_' . $this->eventList->id);
         }
 
         $filter = array();
