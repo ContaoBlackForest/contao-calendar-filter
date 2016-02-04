@@ -48,7 +48,9 @@ class Events
         $eventList->calendarFilterField = deserialize($eventList->calendarFilterField);
 
         if (!empty($eventList->calendarFilterField)) {
-            $eventList->Template->setName('mod_eventlist_filter');
+            if (empty($eventList->customTpl)) {
+                $eventList->Template->setName('mod_eventlist_filter');
+            }
             $eventList->Template->filterForm = '';
 
             if ($eventList->calendarFilterMergeMonth) {
