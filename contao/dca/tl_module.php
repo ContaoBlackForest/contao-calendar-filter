@@ -18,7 +18,7 @@
     'eventlist',
     'config',
     array(
-        'config_filter' => array('calendarFilterField', 'calendarFilterMergeMonth'),
+        'config_filter' => array('calendarFilterField', 'calendarFilterTemplate', 'calendarFilterMergeMonth'),
     )
 );
 
@@ -32,7 +32,26 @@ $fields = array(
         'sql'              => "blob NULL"
     ),
 
-    'calendarFilterMergeMonth'   => array
+    'calendarFilterTemplate' => array (
+        'label'            => &$GLOBALS['TL_LANG']['tl_module']['calendarFilterTemplate'],
+        'exclude' => true,
+        'inputType' => 'select',
+        'options' =>
+            array (
+                'bootstrap3.default.html.twig',
+                'bootstrap3.horizontal.html.twig',
+                'basic.html.twig',
+                'basic.table.html.twig',
+            ),
+        'eval' =>
+            array (
+                'chosen' => true,
+                'tl_class' => 'w50',
+            ),
+        'sql' => 'varchar(64) NOT NULL default \'\'',
+    ),
+
+    'calendarFilterMergeMonth' => array
     (
         'label'     => &$GLOBALS['TL_LANG']['tl_module']['calendarFilterMergeMonth'],
         'exclude'   => true,
