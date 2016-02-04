@@ -27,7 +27,6 @@ class Module
         \Controller::loadDataContainer('tl_calendar_events');
         \Controller::loadLanguageFile('tl_calendar_events');
 
-        global $TL_DCA;
         global $TL_LANG;
 
         $options = array(
