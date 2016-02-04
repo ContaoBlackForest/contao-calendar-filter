@@ -15,10 +15,9 @@
 
 #$GLOBALS['FE_MOD']['events']['eventfilter'] = 'ContaoBlackForest\Module\CalendarFilter\ModuleEventFilter';
 
-$GLOBALS['TL_HOOKS']['getAllEvents'][] = array('ContaoBlackForest\Module\CalendarFilter\Events', 'getAllEvents');
+$GLOBALS['TL_HOOKS']['getAllEvents']['eventfilter'] = array('ContaoBlackForest\Module\CalendarFilter\Events', 'filterAllEvents');
 
-$GLOBALS['TL_EXTEND']['ModuleEventlist'][] = array(
+/*$GLOBALS['TL_EXTEND']['ModuleEventlist'][] = array(
     'namespace' => 'ContaoBlackForest',
     'path'      => 'system/modules/calendar-filter/modules/ModuleEventlist.php'
-);
-
+);*/
