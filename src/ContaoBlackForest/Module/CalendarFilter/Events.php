@@ -61,7 +61,7 @@ class Events
         $this->eventList = &$eventList;
         $this->events    = $events;
 
-        if ($filter = \Session::getInstance()->get('eventlistfilter')) {
+        if ($filter = \Session::getInstance()->get('eventlistfilter_' . $this->eventList->id)) {
             foreach ($filter as $post => $value) {
                 if ($postValue = \Input::post($post)) {
                     $this->filterCalendar($this->events, array('field' => $post, 'value' => $postValue));
@@ -96,7 +96,7 @@ class Events
 
                     if (count($timeRange) < 2) {
                         if ($this->eventList->calendarFilterMergeMonth) {
-                            $filter = \Session::getInstance()->get('eventlistfilter');
+                            $filter = \Session::getInstance()->get('eventlistfilter_' . $this->eventList->id);
 
                             if (!array_key_exists($argument['value'], $filter['mergeMonth'])) {
                                 unset($events[$index]);
@@ -135,7 +135,7 @@ class Events
 
     protected function getFilter()
     {
-        $filter = \Session::getInstance()->get('eventlistfilter');
+        $filter = \Session::getInstance()->get('eventlistfilter_' . $this->eventList->id);
 
         $events = array();
         foreach ($this->events as $firstRow) {
@@ -152,9 +152,9 @@ class Events
             return null;
         }
 
-        $filterAll = \Session::getInstance()->get('filter_module_' . $this->eventList->id);
+        $filterAll = \Session::getInstance()->get('eventlistfilterall_' . $this->eventList->id);
         if (!$filterAll) {
-            \Session::getInstance()->set('filter_module_' . $this->eventList->id, $filter);
+            \Session::getInstance()->set('eventlistfilter_' . $this->eventList->id, $filter);
         }
 
         $filter = array();
@@ -183,8 +183,8 @@ class Events
         #$this->eventList->Template->filterForm = $this->compileFilterForm($filter);
 
         if (!empty($filter)) {
-            \Session::getInstance()->set('eventlistfilter', $filter);
-            \Session::getInstance()->set('eventlistfilterCount', count($this->events));
+            \Session::getInstance()->set('eventlistfilter_' . $this->eventList->id, $filter);
+            \Session::getInstance()->set('eventlistfilterCount_' . $this->eventList->id, count($this->events));
         }
 
         return true;
@@ -192,7 +192,7 @@ class Events
 
     protected function compileFilterForm()
     {
-        $data = \Session::getInstance()->get('eventlistfilter');
+        $data = \Session::getInstance()->get('eventlistfilter_' . $this->eventList->id);
 
         $template = '';
 
