@@ -15,6 +15,9 @@
 
 namespace ContaoBlackForest\Module\CalendarFilter\DataContainer;
 
+use ContaoBlackForest\Module\CalendarFilter\Event\GetFilterOptionsEvent;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
 /**
  * Class Module
  *
@@ -27,7 +30,8 @@ class Module
         \Controller::loadDataContainer('tl_calendar_events');
         \Controller::loadLanguageFile('tl_calendar_events');
 
-        global $TL_LANG;
+        global $container,
+               $TL_LANG;
 
         $options = array(
             'pid'       => $TL_LANG['tl_module']['pidCalendar'],
@@ -35,6 +39,12 @@ class Module
             'startDate' => $TL_LANG['tl_module']['startDateFilter'],
         );
 
-        return $options;
+        /** @var EventDispatcher $eventDispatcher */
+        $eventDispatcher = $container['event-dispatcher'];
+        $event = new GetFilterOptionsEvent();
+        $event->setOptions($options);
+        $eventDispatcher->dispatch(GetFilterOptionsEvent::NAME, $event);
+
+        return $event->getOptions();
     }
 }

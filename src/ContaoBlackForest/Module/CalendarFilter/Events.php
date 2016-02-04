@@ -15,7 +15,12 @@
 
 namespace ContaoBlackForest\Module\CalendarFilter;
 
+use Contao\Session;
 use Contao\Symfony\Component\Form\ContaoFormBuilder;
+use ContaoBlackForest\Module\CalendarFilter\Event\GetFilterOptionsEvent;
+use ContaoBlackForest\Module\CalendarFilter\Event\PostFilterEventsEvent;
+use ContaoBlackForest\Module\CalendarFilter\Event\PostFilterInformationEvent;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 
 /**
@@ -40,6 +45,8 @@ class Events
      */
     public function filterAllEvents(array $events, array $calendars, $startTime, $endTime, \Module &$eventList)
     {
+        global $container;
+
         if (!$eventList->calendarFilterField
         ) {
             return $events;
@@ -63,9 +70,22 @@ class Events
         $this->eventList = &$eventList;
         $this->events    = $events;
 
+        /** @var EventDispatcher $eventDispatcher */
+        $eventDispatcher = $container['event-dispatcher'];
         if ($filter = \Session::getInstance()->get('eventlistfilter_' . $this->eventList->id)) {
             foreach ($filter as $post => $value) {
                 if ($postValue = \Input::post($post)) {
+                    $filterEventsEvent = new PostFilterEventsEvent($post, $postValue);
+                    $filterEventsEvent->setEvents($this->events);
+                    $eventDispatcher->dispatch(PostFilterEventsEvent::NAME, $filterEventsEvent);
+                    $this->events = $filterEventsEvent->getEvents();
+
+                    $filterOptionsEvent = new GetFilterOptionsEvent();
+                    $eventDispatcher->dispatch(GetFilterOptionsEvent::NAME, $filterOptionsEvent);
+
+                    if ($filterOptionsEvent->hasOption($post)) {
+                        continue;
+                    }
                     $this->filterCalendar($this->events, array('field' => $post, 'value' => $postValue));
                 }
             }
@@ -310,7 +330,9 @@ class Events
             return null;
         }
 
-        global $TL_DCA;
+        global $container,
+               $TL_DCA;
+
         $information = array();
 
         if (empty($information)
@@ -378,7 +400,14 @@ class Events
                 }
             }
         }
-        return $information;
+
+        /** @var EventDispatcher $eventDispatcher */
+        $eventDispatcher  = $container['event-dispatcher'];
+        $informationEvent = new PostFilterInformationEvent($field, $data);
+        $informationEvent->setInformation($information);
+        $eventDispatcher->dispatch(PostFilterInformationEvent::NAME, $informationEvent);
+
+        return $informationEvent->getInformation();
     }
 
     protected function mergeFilterMonth(&$filter)
