@@ -12,7 +12,7 @@
         "php": ">=5.3",
         "contao/core": ">=3.2,<4",
         "contao-community-alliance/composer-plugin": "~2.0",
-        "contaoblackforest/contao-symfony-component-form": "dev-develop"
+        "contaoblackforest/contao-symfony-component-form": "~1.0"
     },
     "license": "LGPL-3.0+",
     "authors": [
@@ -33,8 +33,6 @@
     },
     "minimum-stability": "dev",
     "require-dev": {
-        "squizlabs/php_codesniffer": "~2.3",
-        "phpunit/phpunit": "~3.7"
     },
     "autoload": {
         "psr-0": {
@@ -48,7 +46,7 @@
             }
         },
         "branch-alias": {
-            "dev-develop": "1.0.x-dev"
+            "dev-develop": "2.0.x-dev"
         }
     }
 }
