@@ -1,15 +1,33 @@
 <?xml version="1.0" ?>
 <xliff version="1.1">
-    <file datatype="php" original="system/modules/calendar-filter/languages/en/tl_module.xlf" source-language="en">
+    <file datatype="php" original="system/modules/calendar-filter/languages/de/tl_module.xlf" source-language="en" target-language="en">
         <body>
-            <trans-unit id="tl_module.pidCalendarFilter">
+            <trans-unit id="tl_module.calendarFilterMergeMonth.0">
+                <source>Merge months</source>
+            </trans-unit>
+            <trans-unit id="tl_module.calendarFilterMergeMonth.1">
+                <source>When this setting is selected, the months of the year are merged.</source>
+            </trans-unit>
+            <trans-unit id="tl_module.calendarFilterTemplate.0">
+                <source>Filter template</source>
+            </trans-unit>
+            <trans-unit id="tl_module.calendarFilterTemplate.1">
+                <source>Select which template for output is responsible.</source>
+            </trans-unit>
+            <trans-unit id="tl_module.calendarFilterField.0">
+                <source>Filter</source>
+            </trans-unit>
+            <trans-unit id="tl_module.calendarFilterField.1">
+                <source>Filter settings. If an option is selected, then the filter is enabled.</source>
+            </trans-unit>
+            <trans-unit id="tl_module.filterPropertyCalendar">
                 <source>Calendar</source>
             </trans-unit>
-            <trans-unit id="tl_module.startDateCalendarFilter">
-                <source>Months</source>
-            </trans-unit>
-            <trans-unit id="tl_module.authorCalendarFilter">
+            <trans-unit id="tl_module.filterPropertyAuthor">
                 <source>Author</source>
+            </trans-unit>
+            <trans-unit id="tl_module.filterPropertyMonth">
+                <source>Months</source>
             </trans-unit>
             <trans-unit id="tl_module.filterField.0">
                 <source>Filter field</source>
