@@ -3,14 +3,13 @@
 /**
  * contao-calendar-filter
  *
- * Copyright (C) ContaoBlackForest
+ * Copyright © ContaoBlackForest
  *
  * @package   contao-calendar-filter
- * @file      tl_module.php
  * @author    Sven Baumann <baumann.sv@gmail.com>
  * @author    Dominik Tomasi <dominik.tomasi@gmail.com>
  * @license   LGPL-3.0+
- * @copyright Copyright 2015 ContaoBlackForest
+ * @copyright Copyright 2016 ContaoBlackForest
  */
 
 \Bit3\Contao\MetaPalettes\MetaPalettes::appendAfter(

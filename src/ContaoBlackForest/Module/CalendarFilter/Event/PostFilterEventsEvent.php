@@ -6,7 +6,6 @@
  * Copyright © ContaoBlackForest
  *
  * @package   contao-calendar-filter
- * @file      tl_module.php
  * @author    Sven Baumann <baumann.sv@gmail.com>
  * @author    Dominik Tomasi <dominik.tomasi@gmail.com>
  * @license   LGPL-3.0+

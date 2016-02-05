@@ -1,15 +1,15 @@
 <?php
+
 /**
- * FRAMEWORK
+ * contao-calendar-filter
  *
- * Copyright (C) FRAMEWORK
+ * Copyright © ContaoBlackForest
  *
- * @package   brugg-regio-ch
- * @file      Module.php
+ * @package   contao-calendar-filter
  * @author    Sven Baumann <baumann.sv@gmail.com>
  * @author    Dominik Tomasi <dominik.tomasi@gmail.com>
- * @license   GNU/LGPL
- * @copyright Copyright 2015 owner
+ * @license   LGPL-3.0+
+ * @copyright Copyright 2016 ContaoBlackForest
  */
 
 
