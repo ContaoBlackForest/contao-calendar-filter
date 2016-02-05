@@ -12,16 +12,13 @@
  * @copyright Copyright 2016 ContaoBlackForest
  */
 
-
 namespace ContaoBlackForest\Module\CalendarFilter;
 
-use Contao\Session;
 use Contao\Symfony\Component\Form\ContaoFormBuilder;
 use ContaoBlackForest\Module\CalendarFilter\Event\GetFilterOptionsEvent;
 use ContaoBlackForest\Module\CalendarFilter\Event\PostFilterEventsEvent;
 use ContaoBlackForest\Module\CalendarFilter\Event\PostFilterInformationEvent;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-
 
 /**
  * Class Events
@@ -212,8 +209,6 @@ class Events
         }
 
         $this->mergeFilterMonth($filter);
-
-        #$this->eventList->Template->filterForm = $this->compileFilterForm($filter);
 
         if (!empty($filter)) {
             \Session::getInstance()->set('eventlistfilter_' . $this->eventList->id, $filter);

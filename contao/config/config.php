@@ -12,11 +12,4 @@
  * @copyright Copyright 2016 ContaoBlackForest
  */
 
-#$GLOBALS['FE_MOD']['events']['eventfilter'] = 'ContaoBlackForest\Module\CalendarFilter\ModuleEventFilter';
-
 $GLOBALS['TL_HOOKS']['getAllEvents']['eventfilter'] = array('ContaoBlackForest\Module\CalendarFilter\Events', 'filterAllEvents');
-
-/*$GLOBALS['TL_EXTEND']['ModuleEventlist'][] = array(
-    'namespace' => 'ContaoBlackForest',
-    'path'      => 'system/modules/calendar-filter/modules/ModuleEventlist.php'
-);*/
