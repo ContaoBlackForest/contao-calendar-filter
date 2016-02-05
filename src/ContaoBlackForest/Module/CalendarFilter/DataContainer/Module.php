@@ -12,7 +12,6 @@
  * @copyright Copyright 2016 ContaoBlackForest
  */
 
-
 namespace ContaoBlackForest\Module\CalendarFilter\DataContainer;
 
 use ContaoBlackForest\Module\CalendarFilter\Event\GetFilterOptionsEvent;
@@ -34,9 +33,9 @@ class Module
                $TL_LANG;
 
         $options = array(
-            'pid'       => $TL_LANG['tl_module']['pidCalendar'],
-            'author'    => $TL_LANG['tl_calendar_events']['author'][0],
-            'startDate' => $TL_LANG['tl_module']['startDateFilter'],
+            'pid'       => $TL_LANG['tl_module']['filterPropertyCalendar'],
+            'author'    => $TL_LANG['tl_module']['filterPropertyAuthor'],
+            'startDate' => $TL_LANG['tl_module']['filterPropertyMonth'],
         );
 
         /** @var EventDispatcher $eventDispatcher */
