@@ -197,7 +197,7 @@ class Events
         }
 
         $filterAll = \Session::getInstance()->get('eventlistfilterall_' . $this->eventList->id);
-        if ($filterAll) {
+        if (!$filterAll) {
             return true;
         }
 
