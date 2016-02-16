@@ -67,6 +67,15 @@ class Events
         $this->eventList = &$eventList;
         $this->events    = $events;
 
+        if ($eventList->getModel()->perPage) {
+            $restorePost = \Session::getInstance()->get('eventlistfilterpost_' . $this->eventList->id);
+            foreach ($restorePost as $postField => $postValue) {
+                if (\Input::post($postField) === null) {
+                    \Input::setPost($postField, $postValue);
+                }
+            }
+        }
+
         /** @var EventDispatcher $eventDispatcher */
         $eventDispatcher = $container['event-dispatcher'];
         if ($filter = \Session::getInstance()->get('eventlistfilter_' . $this->eventList->id)) {
@@ -88,6 +97,22 @@ class Events
             }
         }
         $this->getFilter();
+
+        if ($eventList->getModel()->perPage) {
+            $postSession = array();
+
+            foreach (array_keys($filter) as $postField) {
+                if (!$postValue = \Input::post($postField)) {
+                    continue;
+                }
+
+                $postSession[$postField] = $postValue;
+            }
+
+            if (count($postSession) > 0) {
+                \Session::getInstance()->set('eventlistfilterpost_' . $this->eventList->id, $postSession);
+            }
+        }
 
         $this->eventList->Template->filterForm = $this->compileFilterForm();
 
@@ -171,7 +196,11 @@ class Events
             return null;
         }
 
-        $filterAll      = \Session::getInstance()->get('eventlistfilterall_' . $this->eventList->id);
+        $filterAll = \Session::getInstance()->get('eventlistfilterall_' . $this->eventList->id);
+        if (!$filterAll) {
+            return true;
+        }
+
         $resetFilterAll = true;
         foreach (array_keys($filterAll) as $postField) {
             if (!\Input::post($postField)) {
