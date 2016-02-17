@@ -77,6 +77,8 @@ class Events
             }
         }
 
+
+        \Session::getInstance()->set('eventlistfilterreload_' . $this->eventList->id, true);
         if ($eventList->getModel()->perPage) {
             $restorePost = \Session::getInstance()->get('eventlistfilterpost_' . $this->eventList->id);
             if ($restorePost) {
@@ -85,6 +87,8 @@ class Events
                         \Input::setPost($postField, $postValue);
                     }
                 }
+
+                \Session::getInstance()->set('eventlistfilterreload_' . $this->eventList->id, false);
             }
         }
 
@@ -139,6 +143,19 @@ class Events
         }
 
         $this->eventList->Template->filterForm = $this->compileFilterForm($filter);
+
+        $reload = false;
+        if (\Session::getInstance()->get('eventlistfilterreload_' . $this->eventList->id)) {
+            foreach ($this->eventList->calendarFilterField as $filterField) {
+                if (\Input::post($filterField) != null) {
+                    $reload = true;
+                }
+            }
+        }
+        if ($reload) {
+            \Session::getInstance()->set('eventlistfilterreload_' . $this->eventList->id, true);
+            \Controller::reload();
+        }
 
         return $this->events;
     }
@@ -348,8 +365,8 @@ class Events
                         'choices'     => $choicesData,
                         'data'        => \Input::post($name),
                         'attr'        => array(
-                            'onchange'   => 'this.form.submit()',
-                            'class'      => 'styled_select tl_select',
+                            'onchange' => 'this.form.submit()',
+                            'class'    => 'styled_select tl_select',
                         )
                     )
                 );
@@ -391,8 +408,6 @@ class Events
                 )
             );
         }
-
-        header('Cache-Control: max-age=600');
 
         return $template;
     }
