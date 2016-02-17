@@ -159,8 +159,8 @@ class Events
                             $removeFromIndex = true;
                             foreach ($filter['mergeMonth'][$argument['value']] as $timeRange) {
                                 $timeRange = explode('-', $timeRange);
-                                if (($value[$argument['field']] > $timeRange[0])
-                                    && ($value[$argument['field']] < $timeRange[1])
+                                if (($value[$argument['field']] >= $timeRange[0])
+                                    && ($value[$argument['field']] <= $timeRange[1])
                                 ) {
                                     $removeFromIndex = false;
                                 }
