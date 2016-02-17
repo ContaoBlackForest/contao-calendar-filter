@@ -69,40 +69,50 @@ class Events
 
         if ($eventList->getModel()->perPage) {
             $restorePost = \Session::getInstance()->get('eventlistfilterpost_' . $this->eventList->id);
-            foreach ($restorePost as $postField => $postValue) {
-                if (\Input::post($postField) === null) {
-                    \Input::setPost($postField, $postValue);
+            if ($restorePost) {
+                foreach ($restorePost as $postField => $postValue) {
+                    if (\Input::post($postField) === null) {
+                        \Input::setPost($postField, $postValue);
+                    }
                 }
             }
         }
 
         /** @var EventDispatcher $eventDispatcher */
         $eventDispatcher = $container['event-dispatcher'];
-        if ($filter = \Session::getInstance()->get('eventlistfilter_' . $this->eventList->id)) {
-            foreach ($filter as $post => $value) {
-                if ($postValue = \Input::post($post)) {
-                    $filterEventsEvent = new PostFilterEventsEvent($post, $postValue);
-                    $filterEventsEvent->setEvents($this->events);
-                    $eventDispatcher->dispatch(PostFilterEventsEvent::NAME, $filterEventsEvent);
-                    $this->events = $filterEventsEvent->getEvents();
-
-                    $filterOptionsEvent = new GetFilterOptionsEvent();
-                    $eventDispatcher->dispatch(GetFilterOptionsEvent::NAME, $filterOptionsEvent);
-
-                    if ($filterOptionsEvent->hasOption($post)) {
-                        continue;
-                    }
-                    $this->filterCalendar($this->events, array('field' => $post, 'value' => $postValue));
-                }
+        if (!$filter = \Session::getInstance()->get('eventlistfilter_' . $this->eventList->id)) {
+            $filter = array();
+            foreach ($eventList->calendarFilterField as $filterField) {
+                $filter[$filterField] = '';
             }
         }
-        $this->getFilter();
 
-        if ($eventList->getModel()->perPage) {
+        foreach ($filter as $post => $value) {
+            if ($postValue = \Input::post($post)) {
+                $filterEventsEvent = new PostFilterEventsEvent($post, $postValue);
+                $filterEventsEvent->setEvents($this->events);
+                $eventDispatcher->dispatch(PostFilterEventsEvent::NAME, $filterEventsEvent);
+                $this->events = $filterEventsEvent->getEvents();
+
+                $filterOptionsEvent = new GetFilterOptionsEvent();
+                $eventDispatcher->dispatch(GetFilterOptionsEvent::NAME, $filterOptionsEvent);
+
+                if ($filterOptionsEvent->hasOption($post)) {
+                    continue;
+                }
+                $this->filterCalendar($this->events, array('field' => $post, 'value' => $postValue));
+            }
+        }
+        $this->getFilter($filter);
+
+        if ($eventList->getModel()->perPage
+            && $filter
+        ) {
             $postSession = array();
 
             foreach (array_keys($filter) as $postField) {
-                if (!$postValue = \Input::post($postField)) {
+                $postValue = \Input::post($postField);
+                if (!$postValue || $postValue === '') {
                     continue;
                 }
 
@@ -112,9 +122,13 @@ class Events
             if (count($postSession) > 0) {
                 \Session::getInstance()->set('eventlistfilterpost_' . $this->eventList->id, $postSession);
             }
+
+            if (count($postSession) < 1) {
+                \Session::getInstance()->set('eventlistfilterpost_' . $this->eventList->id, null);
+            }
         }
 
-        $this->eventList->Template->filterForm = $this->compileFilterForm();
+        $this->eventList->Template->filterForm = $this->compileFilterForm($filter);
 
         return $this->events;
     }
@@ -150,8 +164,8 @@ class Events
                             $removeFromIndex = true;
                             foreach ($filter['mergeMonth'][$argument['value']] as $timeRange) {
                                 $timeRange = explode('-', $timeRange);
-                                if (($value[$argument['field']] > $timeRange[0])
-                                    && ($value[$argument['field']] < $timeRange[1])
+                                if (($value[$argument['field']] >= $timeRange[0])
+                                    && ($value[$argument['field']] <= $timeRange[1])
                                 ) {
                                     $removeFromIndex = false;
                                 }
@@ -177,9 +191,11 @@ class Events
         }
     }
 
-    protected function getFilter()
+    protected function getFilter($filter)
     {
-        $filter = \Session::getInstance()->get('eventlistfilter_' . $this->eventList->id);
+        if ($sessionFilter = \Session::getInstance()->get('eventlistfilter_' . $this->eventList->id)) {
+            $filter = $sessionFilter;
+        }
 
         $events = array();
         foreach ($this->events as $firstRow) {
@@ -197,17 +213,17 @@ class Events
         }
 
         $filterAll = \Session::getInstance()->get('eventlistfilterall_' . $this->eventList->id);
-        if (!$filterAll) {
-            return true;
-        }
+
 
         $resetFilterAll = true;
-        foreach (array_keys($filterAll) as $postField) {
-            if (!\Input::post($postField)) {
-                continue;
-            }
+        if ($filterAll) {
+            foreach (array_keys($filterAll) as $postField) {
+                if (!\Input::post($postField)) {
+                    continue;
+                }
 
-            $resetFilterAll = false;
+                $resetFilterAll = false;
+            }
         }
         if (!$filterAll
             || $resetFilterAll
