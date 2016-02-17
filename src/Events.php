@@ -111,7 +111,8 @@ class Events
             $postSession = array();
 
             foreach (array_keys($filter) as $postField) {
-                if (!$postValue = \Input::post($postField)) {
+                $postValue = \Input::post($postField);
+                if (!$postValue || $postValue === '') {
                     continue;
                 }
 
@@ -120,6 +121,10 @@ class Events
 
             if (count($postSession) > 0) {
                 \Session::getInstance()->set('eventlistfilterpost_' . $this->eventList->id, $postSession);
+            }
+
+            if (count($postSession) < 1) {
+                \Session::getInstance()->set('eventlistfilterpost_' . $this->eventList->id, null);
             }
         }
 
