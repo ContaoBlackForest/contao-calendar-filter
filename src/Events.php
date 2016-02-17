@@ -14,10 +14,10 @@
 
 namespace ContaoBlackForest\Module\CalendarFilter;
 
-use Contao\Symfony\Component\Form\ContaoFormBuilder;
 use ContaoBlackForest\Module\CalendarFilter\Event\GetFilterOptionsEvent;
 use ContaoBlackForest\Module\CalendarFilter\Event\PostFilterEventsEvent;
 use ContaoBlackForest\Module\CalendarFilter\Event\PostFilterInformationEvent;
+use ContaoBlackForest\Module\CalendarFilter\FormBuilder\FormFilterBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -66,6 +66,16 @@ class Events
 
         $this->eventList = &$eventList;
         $this->events    = $events;
+
+        if (\Input::post('resetFilter') === '') {
+            foreach ($eventList->calendarFilterField as $filterField) {
+                if (!\Input::post($filterField)) {
+                    continue;
+                }
+
+                \Input::setPost($filterField, '');
+            }
+        }
 
         if ($eventList->getModel()->perPage) {
             $restorePost = \Session::getInstance()->get('eventlistfilterpost_' . $this->eventList->id);
@@ -273,7 +283,7 @@ class Events
             return $template;
         }
 
-        $form    = new ContaoFormBuilder();
+        $form    = new FormFilterBuilder();
         $builder = $form->getBuilder();
 
         $sortedData = array();
@@ -338,13 +348,25 @@ class Events
                         'choices'     => $choicesData,
                         'data'        => \Input::post($name),
                         'attr'        => array(
-                            'onchange' => 'this.form.submit()',
-                            'class'    => 'styled_select tl_select',
+                            'onchange'   => 'this.form.submit()',
+                            'class'      => 'styled_select tl_select',
                         )
                     )
                 );
             }
         }
+
+        $builder->add(
+            'resetFilter',
+            'submit',
+            array(
+                'label' => $GLOBALS['TL_LANG']['FMD']['eventfilter']['resetFilter'],
+                'attr'  => array(
+                    'onchange' => 'this.form.submit()',
+                    'class'    => 'styled_select tl_select',
+                )
+            )
+        );
 
         $objPage = null;
         foreach (array_keys($data) as $comparison) {
@@ -369,6 +391,8 @@ class Events
                 )
             );
         }
+
+        header('Cache-Control: max-age=600');
 
         return $template;
     }
