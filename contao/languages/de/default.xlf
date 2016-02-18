@@ -17,6 +17,10 @@
                 <source>Please select ...</source>
                 <target>Bitte wählen ...</target>
             </trans-unit>
+            <trans-unit id="FMD.eventfilter.resetFilter">
+                <source>Reset Filter</source>
+                <target>Filter zurücksetzen</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

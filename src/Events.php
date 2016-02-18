@@ -14,10 +14,10 @@
 
 namespace ContaoBlackForest\Module\CalendarFilter;
 
-use Contao\Symfony\Component\Form\ContaoFormBuilder;
 use ContaoBlackForest\Module\CalendarFilter\Event\GetFilterOptionsEvent;
 use ContaoBlackForest\Module\CalendarFilter\Event\PostFilterEventsEvent;
 use ContaoBlackForest\Module\CalendarFilter\Event\PostFilterInformationEvent;
+use ContaoBlackForest\Module\CalendarFilter\FormBuilder\FormFilterBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -67,6 +67,18 @@ class Events
         $this->eventList = &$eventList;
         $this->events    = $events;
 
+        if (\Input::post('resetFilter') === '') {
+            foreach ($eventList->calendarFilterField as $filterField) {
+                if (!\Input::post($filterField)) {
+                    continue;
+                }
+
+                \Input::setPost($filterField, '');
+            }
+        }
+
+
+        \Session::getInstance()->set('eventlistfilterreload_' . $this->eventList->id, true);
         if ($eventList->getModel()->perPage) {
             $restorePost = \Session::getInstance()->get('eventlistfilterpost_' . $this->eventList->id);
             if ($restorePost) {
@@ -75,6 +87,8 @@ class Events
                         \Input::setPost($postField, $postValue);
                     }
                 }
+
+                \Session::getInstance()->set('eventlistfilterreload_' . $this->eventList->id, false);
             }
         }
 
@@ -129,6 +143,19 @@ class Events
         }
 
         $this->eventList->Template->filterForm = $this->compileFilterForm($filter);
+
+        $reload = false;
+        if (\Session::getInstance()->get('eventlistfilterreload_' . $this->eventList->id)) {
+            foreach ($this->eventList->calendarFilterField as $filterField) {
+                if (\Input::post($filterField) != null) {
+                    $reload = true;
+                }
+            }
+        }
+        if ($reload) {
+            \Session::getInstance()->set('eventlistfilterreload_' . $this->eventList->id, true);
+            \Controller::reload();
+        }
 
         return $this->events;
     }
@@ -273,7 +300,7 @@ class Events
             return $template;
         }
 
-        $form    = new ContaoFormBuilder();
+        $form    = new FormFilterBuilder();
         $builder = $form->getBuilder();
 
         $sortedData = array();
@@ -345,6 +372,18 @@ class Events
                 );
             }
         }
+
+        $builder->add(
+            'resetFilter',
+            'submit',
+            array(
+                'label' => $GLOBALS['TL_LANG']['FMD']['eventfilter']['resetFilter'],
+                'attr'  => array(
+                    'onchange' => 'this.form.submit()',
+                    'class'    => 'styled_select tl_select',
+                )
+            )
+        );
 
         $objPage = null;
         foreach (array_keys($data) as $comparison) {
