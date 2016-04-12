@@ -79,17 +79,15 @@ class Events
 
 
         \Session::getInstance()->set('eventlistfilterreload_' . $this->eventList->id, true);
-        if ($eventList->getModel()->perPage) {
-            $restorePost = \Session::getInstance()->get('eventlistfilterpost_' . $this->eventList->id);
-            if ($restorePost) {
-                foreach ($restorePost as $postField => $postValue) {
-                    if (\Input::post($postField) === null) {
-                        \Input::setPost($postField, $postValue);
-                    }
+        $restorePost = \Session::getInstance()->get('eventlistfilterpost_' . $this->eventList->id);
+        if ($restorePost) {
+            foreach ($restorePost as $postField => $postValue) {
+                if (\Input::post($postField) === null) {
+                    \Input::setPost($postField, $postValue);
                 }
-
-                \Session::getInstance()->set('eventlistfilterreload_' . $this->eventList->id, false);
             }
+
+            \Session::getInstance()->set('eventlistfilterreload_' . $this->eventList->id, false);
         }
 
         /** @var EventDispatcher $eventDispatcher */
@@ -119,27 +117,23 @@ class Events
         }
         $this->getFilter($filter);
 
-        if ($eventList->getModel()->perPage
-            && $filter
-        ) {
-            $postSession = array();
+        $postSession = array();
 
-            foreach (array_keys($filter) as $postField) {
-                $postValue = \Input::post($postField);
-                if (!$postValue || $postValue === '') {
-                    continue;
-                }
-
-                $postSession[$postField] = $postValue;
+        foreach (array_keys($filter) as $postField) {
+            $postValue = \Input::post($postField);
+            if (!$postValue || $postValue === '') {
+                continue;
             }
 
-            if (count($postSession) > 0) {
-                \Session::getInstance()->set('eventlistfilterpost_' . $this->eventList->id, $postSession);
-            }
+            $postSession[$postField] = $postValue;
+        }
 
-            if (count($postSession) < 1) {
-                \Session::getInstance()->set('eventlistfilterpost_' . $this->eventList->id, null);
-            }
+        if (count($postSession) > 0) {
+            \Session::getInstance()->set('eventlistfilterpost_' . $this->eventList->id, $postSession);
+        }
+
+        if (count($postSession) < 1) {
+            \Session::getInstance()->set('eventlistfilterpost_' . $this->eventList->id, null);
         }
 
         $this->eventList->Template->filterForm = $this->compileFilterForm($filter);
