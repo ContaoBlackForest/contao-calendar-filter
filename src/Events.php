@@ -79,7 +79,6 @@ class Events
 
 
         \Session::getInstance()->set('eventlistfilterreload_' . $this->eventList->id, true);
-        if ($eventList->getModel()->perPage) {
             $restorePost = \Session::getInstance()->get('eventlistfilterpost_' . $this->eventList->id);
             if ($restorePost) {
                 foreach ($restorePost as $postField => $postValue) {
@@ -90,7 +89,6 @@ class Events
 
                 \Session::getInstance()->set('eventlistfilterreload_' . $this->eventList->id, false);
             }
-        }
 
         /** @var EventDispatcher $eventDispatcher */
         $eventDispatcher = $container['event-dispatcher'];
@@ -119,9 +117,6 @@ class Events
         }
         $this->getFilter($filter);
 
-        if ($eventList->getModel()->perPage
-            && $filter
-        ) {
             $postSession = array();
 
             foreach (array_keys($filter) as $postField) {
@@ -140,7 +135,6 @@ class Events
             if (count($postSession) < 1) {
                 \Session::getInstance()->set('eventlistfilterpost_' . $this->eventList->id, null);
             }
-        }
 
         $this->eventList->Template->filterForm = $this->compileFilterForm($filter);
 
