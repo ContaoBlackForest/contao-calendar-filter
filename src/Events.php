@@ -141,7 +141,9 @@ class Events
         $reload = false;
         if (\Session::getInstance()->get('eventlistfilterreload_' . $this->eventList->id)) {
             foreach ($this->eventList->calendarFilterField as $filterField) {
-                if (\Input::post($filterField) != null) {
+                if (\Input::post($filterField) != null
+                    && \Input::post($filterField) !== '0'
+                ) {
                     $reload = true;
                 }
             }
