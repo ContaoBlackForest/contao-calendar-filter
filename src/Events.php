@@ -67,6 +67,20 @@ class Events
         $this->eventList = &$eventList;
         $this->events    = $events;
 
+        $deleteSession = true;
+        foreach ($eventList->calendarFilterField as $filterField) {
+            if (\Input::post($filterField)) {
+                continue;
+            }
+
+            $deleteSession = false;
+        }
+
+
+        if ($deleteSession) {
+            \Session::getInstance()->remove('eventlistfilterreload_' . $this->eventList->id);
+        }
+
         if (\Input::post('resetFilter') === '') {
             foreach ($eventList->calendarFilterField as $filterField) {
                 if (!\Input::post($filterField)) {
