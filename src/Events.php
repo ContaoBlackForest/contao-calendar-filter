@@ -276,6 +276,7 @@ class Events
 
         if ($this->eventList->calendarFilterMergeMonth
             && \Input::post('startDate')
+            && $filter['mergeMonth'][\Input::post('startDate')]
         ) {
             $filter['mergeMonth'][\Input::post('startDate')] =
                 $filterAll['mergeMonth'][\Input::post('startDate')];
